@@ -11,6 +11,7 @@ public class MissileLauncher : MonoBehaviourInTimeline
 	private readonly Vector3 RENDER_OFFSET = new Vector3(0, 0, .1f);
 
 	public GameObject missileGO;
+	public GameObject missileShadow;
 
 	private ParticlePool _particles;
 	private LinePool _lines;
@@ -57,6 +58,8 @@ public class MissileLauncher : MonoBehaviourInTimeline
 
 		_collision.AddHazard(miss.transform);
 		var line = _lines?.RequestLine(from + RENDER_OFFSET, to + RENDER_OFFSET);
+
+		Instantiate(missileShadow, to, Quaternion.identity);
 
 		var trans = new CoroutineTransformPosition(miss.transform, from, to)
 			.SetInterpolation(new ExponentialInterpolation())

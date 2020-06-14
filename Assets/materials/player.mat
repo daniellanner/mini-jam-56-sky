@@ -20,9 +20,14 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - _NoiseTex:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: 58e0bf4f058823545814ab847a8fa57e, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
     - _AlphaEase: 2
-    m_Colors: []
+    - _Ease: 4
+    - _Radius: 0.5
+    m_Colors:
+    - _Color1: {r: 0, g: 0.053274192, b: 0.4528302, a: 1}
+    - _Color2: {r: 0, g: 0.25605056, b: 0.9056604, a: 1}
+    - _Color3: {r: 18.379171, g: 8.4327965, b: 0, a: 1}

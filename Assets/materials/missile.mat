@@ -23,5 +23,13 @@ Material:
         m_Texture: {fileID: 2800000, guid: 3063615a6b15ff040bd44bd3869cdcf7, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
-    m_Floats: []
-    m_Colors: []
+    - _NoiseTex:
+        m_Texture: {fileID: 2800000, guid: f0278f18aa070e840b9ea8a142db5f6f, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Floats:
+    - _Ease: 0.5
+    m_Colors:
+    - _Color1: {r: 1, g: 0.053243056, b: 0, a: 1}
+    - _Color2: {r: 1, g: 0.20392157, b: 0, a: 1}
+    - _Color3: {r: 1.4142135, g: 0.70987976, b: 0, a: 1}

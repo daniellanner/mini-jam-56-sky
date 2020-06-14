@@ -7,6 +7,9 @@ using UnityEngine;
 public class Intro : MonoBehaviourInTimeline
 {
 	TimelineManager _timelines;
+	
+	[SerializeField]
+	private Canvas _controlsCanvas;
 
 	private void Awake()
 	{
@@ -15,8 +18,13 @@ public class Intro : MonoBehaviourInTimeline
 
 	public override void EnterTimeline()
 	{
-		base.EnterTimeline();
+		_controlsCanvas.enabled = true;
 	}
+	public override void ExitTimeline()
+	{
+		_controlsCanvas.enabled = false;
+	}
+
 
 	public override void UpdateTimeline(float dt)
 	{
