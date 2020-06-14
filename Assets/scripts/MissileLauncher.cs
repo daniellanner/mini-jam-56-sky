@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using io.daniellanner.indiversity;
+using System.Linq;
 
 [TimelineDescription("game")]
 public class MissileLauncher : MonoBehaviourInTimeline
@@ -13,7 +14,7 @@ public class MissileLauncher : MonoBehaviourInTimeline
 	public GameObject missileGO;
 	public GameObject missileShadow;
 
-	private ParticlePool _particles;
+	private ParticlePool _dirtParticles;
 	private LinePool _lines;
 	private SimpleRadialCollision _collision;
 	private CameraController _camera;
@@ -23,7 +24,7 @@ public class MissileLauncher : MonoBehaviourInTimeline
 
 	private void Awake()
 	{
-		_particles = FindObjectOfType<ParticlePool>();
+		_dirtParticles = FindObjectsOfType<ParticlePool>().First(it => it.gameObject.tag == "Dirt");
 		_lines = FindObjectOfType<LinePool>();
 		_collision = FindObjectOfType<SimpleRadialCollision>();
 		_camera = FindObjectOfType<CameraController>();
@@ -53,6 +54,8 @@ public class MissileLauncher : MonoBehaviourInTimeline
 		Vector3 from = new Vector3(Random.Range(-BREADTH, BREADTH), 15f, 0f);
 		Vector3 to = new Vector3(Random.Range(-BREADTH, BREADTH), 0f, Random.Range(-BREADTH_OFF, BREADTH_OFF));
 
+		to.z += Mathf.Sign(to.z) * 0.5f; // make space for our water pools
+
 		GameObject miss = Instantiate(missileGO, from, Quaternion.identity);
 		miss.transform.LookAt(from + Vector3.forward, from - to);
 
@@ -75,7 +78,7 @@ public class MissileLauncher : MonoBehaviourInTimeline
 				}
 				
 				// impact
-				var res = _particles?.RequestAndPlayParticles(to);
+				var res = _dirtParticles?.RequestAndPlayParticles(to);
 				_camera?.MissileImpact();
 			});
 

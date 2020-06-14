@@ -113,7 +113,7 @@ public class PlayerController : MonoBehaviourInTimeline
 			}
 		}
 
-		_count = Mathf.Lerp(_count, count, Time.deltaTime * 10f);
+		_count = Mathf.Lerp(_count, count, Time.deltaTime * 2.5f);
 
 		if(_count < 0.01f)
 		{
