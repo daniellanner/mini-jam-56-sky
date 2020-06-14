@@ -906,7 +906,7 @@ GameObject:
   - component: {fileID: 664045665}
   - component: {fileID: 664045666}
   m_Layer: 0
-  m_Name: GameObject (1)
+  m_Name: Missile Launcher
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -953,7 +953,7 @@ GameObject:
   - component: {fileID: 664380639}
   - component: {fileID: 664380638}
   m_Layer: 0
-  m_Name: GameObject
+  m_Name: Player Controller
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

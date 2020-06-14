@@ -51,6 +51,7 @@ public class PlayerController : MonoBehaviourInTimeline
 	private float _dilationOffset = 2f;
 
 	private float _count = 0f;
+	private float _inputDirection = -1f;
 	#endregion
 
 	private List<PlayerElement> _elements;
@@ -63,9 +64,11 @@ public class PlayerController : MonoBehaviourInTimeline
 	// Update is called once per frame
 	public override void UpdateTimeline(float dt)
 	{
+		CheckForInputInvert();
+
 		// dirty dirty movement easing
 		// instead of using physics just gain speed with input and dampen speed when no input
-		if(HasPlayerRotationInput())
+		if (HasPlayerRotationInput())
 		{
 			float rotGainInverse = 1f / _rotationGain;
 			_rotationInput += GetPlayerRotationInput() * dt * rotGainInverse;
@@ -130,7 +133,7 @@ public class PlayerController : MonoBehaviourInTimeline
 
 	private float GetPlayerRotationInput()
 	{
-		return Input.GetAxis("Horizontal") * -1f;
+		return Input.GetAxis("Horizontal") * _inputDirection;
 	}
 
 	private bool HasPlayerRotationInput()
@@ -140,11 +143,19 @@ public class PlayerController : MonoBehaviourInTimeline
 
 	private float GetPlayerDilusionInput()
 	{
-		return Input.GetAxis("Vertical") * -1f;
+		return Input.GetAxis("Vertical") * _inputDirection;
 	}
 
 	private bool HasPlayerDilusionInput()
 	{
 		return Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.DownArrow) || Mathf.Abs(Input.GetAxisRaw("Vertical")) > .1f;
+	}
+
+	private void CheckForInputInvert()
+	{
+		if (Input.GetKeyDown(KeyCode.I) || Input.GetButtonDown("Invert"))
+		{
+			_inputDirection = -_inputDirection;
+		}
 	}
 }
