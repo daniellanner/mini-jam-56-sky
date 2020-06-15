@@ -48,7 +48,6 @@ public class SimpleRadialCollision : MonoBehaviour
 				if (Vector3.SqrMagnitude(hazardPosition - _playerElements[i].transform.position) <= _collisionDistanceSqrd)
 				{
 					_playerElements[i].Die();
-					_playerElements.RemoveAt(i);
 				}
 			}
 		}

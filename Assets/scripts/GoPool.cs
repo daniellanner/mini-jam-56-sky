@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using io.daniellanner.indiversity;
+using System.Linq;
 
 public class GoPool : PoolBase
 {
@@ -10,7 +11,9 @@ public class GoPool : PoolBase
 
 	private void OnEnable()
 	{
-		_tr = GetComponentsInChildren<Transform>();
+		_tr = GetComponentsInChildren<Transform>()
+		.Where(it => it != transform)
+		.ToArray();
 	}
 
 	public Result<Transform> RequestObject(Vector3 position)
@@ -24,4 +27,12 @@ public class GoPool : PoolBase
 
 		return result;
 	}
+
+	public void Cleanup()
+	{
+		foreach(var it in _tr)
+		{
+			it.localPosition = Vector3.zero;
+		}
+}
 }

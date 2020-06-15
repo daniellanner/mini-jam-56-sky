@@ -4,7 +4,7 @@ using UnityEngine;
 using System.Linq;
 using io.daniellanner.indiversity;
 
-[TimelineDescription("main", true)]
+[TimelineDescription("game", false)]
 public class PlayerController : MonoBehaviourInTimeline
 { 
 	private const float TWO_PI = 6.28318548f;
@@ -61,6 +61,30 @@ public class PlayerController : MonoBehaviourInTimeline
 		_elements = GetComponentsInChildren<PlayerElement>().ToList();
 	}
 
+	public override void EnterTimeline()
+	{
+		_elements = GetComponentsInChildren<PlayerElement>().ToList();
+
+		_rotationInput = 0f;
+		_rotationOffset = 0f;
+
+		_dilationInput = 0f;
+		_dilationOffset = 2f;
+
+		_count = 0f;
+	}
+
+	public override void ExitTimeline()
+	{
+		for (int i = _elements.Count - 1; i >= 0f; i--)
+		{
+			if (!_elements[i].Dead)
+			{
+				_elements[i].Die();
+			}
+		}
+	}
+
 	// Update is called once per frame
 	public override void UpdateTimeline(float dt)
 	{
@@ -111,6 +135,12 @@ public class PlayerController : MonoBehaviourInTimeline
 			{
 				_elements.RemoveAt(i);
 			}
+		}
+
+		if(count <= 1)
+		{
+			Timelines?.DeactiveTimeline("game");
+			Timelines?.ActivateTimeline("epilogue");
 		}
 
 		_count = Mathf.Lerp(_count, count, Time.deltaTime * 2.5f);

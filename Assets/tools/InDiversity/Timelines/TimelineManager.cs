@@ -11,14 +11,15 @@ namespace io.daniellanner.indiversity
 		private List<string> _activeTimelineIDs = new List<string>();
 		private Dictionary<string, List<MonoBehaviourInTimeline>> _allTimelines = new Dictionary<string, List<MonoBehaviourInTimeline>>();
 
-		private void AddToActiveTimeline(string id)
+		private bool AddToActiveTimeline(string id)
 		{
 			if (_activeTimelineIDs.Contains(id))
 			{
-				return;
+				return false;
 			}
 
 			_activeTimelineIDs.Add(id);
+			return true;
 		}
 
 		private void BuildActiveTimelines()
@@ -33,9 +34,9 @@ namespace io.daniellanner.indiversity
 
 		public void DeactiveTimeline(string id)
 		{
-			_activeTimelineIDs.Remove(id);
+			bool removed = _activeTimelineIDs.Remove(id);
 
-			if (_allTimelines.ContainsKey(id))
+			if (removed && _allTimelines.ContainsKey(id))
 			{
 				_allTimelines[id].ForEach(it => it.ExitTimeline());
 			}
@@ -43,9 +44,9 @@ namespace io.daniellanner.indiversity
 
 		public void ActivateTimeline(string id)
 		{
-			AddToActiveTimeline(id);
+			bool notActive = AddToActiveTimeline(id);
 
-			if (_allTimelines.ContainsKey(id))
+			if (notActive && _allTimelines.ContainsKey(id))
 			{
 				_allTimelines[id].ForEach(it => it.EnterTimeline());
 			}
@@ -60,6 +61,8 @@ namespace io.daniellanner.indiversity
 
 			foreach (var it in obj)
 			{
+				it.Timelines = this;
+
 				var desc = (TimelineDescription)System.Attribute.GetCustomAttribute(it.GetType(), typeof(TimelineDescription));
 
 				if (desc == null)

@@ -4,7 +4,8 @@ using UnityEngine;
 using System.Linq;
 using io.daniellanner.indiversity;
 
-public class PlayerElement : MonoBehaviour
+[TimelineDescription("game")]
+public class PlayerElement : MonoBehaviourInTimeline
 {
 	private bool _dead = false;
 	public bool Dead => _dead;
@@ -16,6 +17,13 @@ public class PlayerElement : MonoBehaviour
 	{
 		_waterfallParticles = FindObjectsOfType<ParticlePool>().First(it => it.gameObject.tag == "Pool");
 		_poolElements = FindObjectsOfType<GoPool>().First(it => it.gameObject.tag == "Pool");
+	}
+
+	public override void EnterTimeline()
+	{
+		_dead = false;
+		transform.localScale = Vector3.one;
+		_poolElements?.Cleanup();
 	}
 
 	public void Die()

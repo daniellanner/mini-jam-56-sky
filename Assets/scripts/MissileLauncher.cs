@@ -19,7 +19,7 @@ public class MissileLauncher : MonoBehaviourInTimeline
 	private SimpleRadialCollision _collision;
 	private CameraController _camera;
 
-	private float _shootInterval = 2f;
+	private float _shootInterval = 4f;
 	private float _currentCtr = 0f;
 
 	private void Awake()
@@ -32,8 +32,24 @@ public class MissileLauncher : MonoBehaviourInTimeline
 	
 	public override void EnterTimeline()
 	{
-		_shootInterval = 2f;
+		_shootInterval = 4f;
 		_currentCtr = 0f;
+
+		var children = GetComponentsInChildren<Transform>();
+		for (int i = children.Length - 1; i >= 0; i--)
+		{
+			if(children[i].gameObject == gameObject)
+			{
+				continue;
+			}
+
+			Destroy(children[i].gameObject);
+		}
+	}
+
+	public override void ExitTimeline()
+	{
+		
 	}
 
 	public override void UpdateTimeline(float dt)
@@ -45,7 +61,8 @@ public class MissileLauncher : MonoBehaviourInTimeline
 			Shoot();
 			_currentCtr = 0f;
 
-			// TODO: (Daniel) adapt shoot interval to speed up
+			_shootInterval -= .2f;
+			_shootInterval = Mathf.Clamp(_shootInterval, 1f, 4f);
 		}
 	}
 
@@ -56,13 +73,13 @@ public class MissileLauncher : MonoBehaviourInTimeline
 
 		to.z += Mathf.Sign(to.z) * 0.5f; // make space for our water pools
 
-		GameObject miss = Instantiate(missileGO, from, Quaternion.identity);
+		GameObject miss = Instantiate(missileGO, from, Quaternion.identity, transform);
 		miss.transform.LookAt(from + Vector3.forward, from - to);
 
 		_collision.AddHazard(miss.transform);
 		var line = _lines?.RequestLine(from + RENDER_OFFSET, to + RENDER_OFFSET);
 
-		Instantiate(missileShadow, to, Quaternion.identity);
+		Instantiate(missileShadow, to, Quaternion.identity, transform);
 
 		var trans = new CoroutineTransformPosition(miss.transform, from, to)
 			.SetInterpolation(new ExponentialInterpolation())

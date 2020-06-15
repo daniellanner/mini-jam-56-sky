@@ -7,9 +7,11 @@ using UnityEngine;
 public class Intro : MonoBehaviourInTimeline
 {
 	TimelineManager _timelines;
-	
+
+#pragma warning disable CS0649
 	[SerializeField]
 	private Canvas _controlsCanvas;
+#pragma warning restore CS0649
 
 	private void Awake()
 	{
@@ -28,7 +30,7 @@ public class Intro : MonoBehaviourInTimeline
 
 	public override void UpdateTimeline(float dt)
 	{
-		if(Input.GetKeyDown(KeyCode.Return))
+		if(Input.GetKeyDown(KeyCode.Return) || Input.GetButtonDown("Submit"))
 		{
 			_timelines.ActivateTimeline("game");
 			_timelines.DeactiveTimeline("menu");
