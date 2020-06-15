@@ -7,7 +7,7 @@ using System.Linq;
 [TimelineDescription("game")]
 public class MissileLauncher : MonoBehaviourInTimeline
 {
-	private const float BREADTH = 5f;
+	private const float BREADTH = 3.5f;
 	private const float BREADTH_OFF = 2.5f;
 	private readonly Vector3 RENDER_OFFSET = new Vector3(0, 0, .1f);
 
@@ -18,6 +18,7 @@ public class MissileLauncher : MonoBehaviourInTimeline
 	private LinePool _lines;
 	private SimpleRadialCollision _collision;
 	private CameraController _camera;
+	private AudioSource _audio;
 
 	private float _shootInterval = 4f;
 	private float _currentCtr = 0f;
@@ -28,6 +29,7 @@ public class MissileLauncher : MonoBehaviourInTimeline
 		_lines = FindObjectOfType<LinePool>();
 		_collision = FindObjectOfType<SimpleRadialCollision>();
 		_camera = FindObjectOfType<CameraController>();
+		_audio = GetComponent<AudioSource>();
 	}
 	
 	public override void EnterTimeline()
@@ -80,6 +82,9 @@ public class MissileLauncher : MonoBehaviourInTimeline
 		var line = _lines?.RequestLine(from + RENDER_OFFSET, to + RENDER_OFFSET);
 
 		Instantiate(missileShadow, to, Quaternion.identity, transform);
+
+		_audio.pitch = Random.Range(0.95f, 1.05f);
+		_audio.PlayDelayed(1.15f);
 
 		var trans = new CoroutineTransformPosition(miss.transform, from, to)
 			.SetInterpolation(new ExponentialInterpolation())

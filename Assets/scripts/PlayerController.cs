@@ -9,7 +9,7 @@ public class PlayerController : MonoBehaviourInTimeline
 { 
 	private const float TWO_PI = 6.28318548f;
 	private const float MIN_DILATION_DISTANCE = 1f;
-	private const float MAX_DILATION_DISTANCE = 3.25f;
+	private const float MAX_DILATION_DISTANCE = 2.75f;
 
 	#region Properties
 	[Header("Rotation Settings")]
