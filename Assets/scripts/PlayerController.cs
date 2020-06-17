@@ -141,7 +141,7 @@ public class PlayerController : MonoBehaviourInTimeline
 			}
 		}
 
-		if(count <= 0)
+		if(count <= 1)
 		{
 			// game over
 			Timelines?.DeactiveTimeline("game");

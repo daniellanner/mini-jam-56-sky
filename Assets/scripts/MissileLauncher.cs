@@ -21,6 +21,7 @@ public class MissileLauncher : MonoBehaviourInTimeline
 	private AudioSource _audio;
 
 	private float _shootInterval = 4f;
+	private float _missileDelay = 1.5f;
 	private float _currentCtr = 0f;
 
 	private void Awake()
@@ -35,6 +36,7 @@ public class MissileLauncher : MonoBehaviourInTimeline
 	public override void EnterTimeline()
 	{
 		_shootInterval = 4f;
+		_missileDelay = 1.5f;
 		_currentCtr = 0f;
 
 		var children = GetComponentsInChildren<Transform>();
@@ -64,7 +66,10 @@ public class MissileLauncher : MonoBehaviourInTimeline
 			_currentCtr = 0f;
 
 			_shootInterval -= .2f;
-			_shootInterval = Mathf.Clamp(_shootInterval, 1f, 4f);
+			_shootInterval = Mathf.Clamp(_shootInterval, .75f, 4f);
+
+			_missileDelay -= 0.05f;
+			_missileDelay = Mathf.Clamp(_missileDelay, 0.5f, 1.5f);
 		}
 	}
 
@@ -84,11 +89,11 @@ public class MissileLauncher : MonoBehaviourInTimeline
 		Instantiate(missileShadow, to, Quaternion.identity, transform);
 
 		_audio.pitch = Random.Range(0.95f, 1.05f);
-		_audio.PlayDelayed(1.15f);
+		_audio.PlayDelayed(_missileDelay + .15f);
 
 		var trans = new CoroutineTransformPosition(miss.transform, from, to)
 			.SetInterpolation(new ExponentialInterpolation())
-			.SetDelay(1f)
+			.SetDelay(_missileDelay)
 			.SetDuration(.5f)
 			.SetCallback(() =>
 			{
