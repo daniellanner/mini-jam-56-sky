@@ -13,9 +13,12 @@ public class SimpleRadialCollision : MonoBehaviour
 	private List<PlayerElement> _playerElements = new List<PlayerElement>();
 	private List<Transform> _hazards = new List<Transform>();
 
+	private Transform _cam;
+
 	private void Awake()
 	{
 		_playerElements = FindObjectsOfType<PlayerElement>().ToList();
+		_cam = Camera.main.transform;
 	}
 
 	private void Start()
@@ -40,15 +43,22 @@ public class SimpleRadialCollision : MonoBehaviour
 			// go through backwards since we delete object from list
 			for (int i = _playerElements.Count-1; i >= 0; i--)
 			{
+				UnityEngine.Profiling.Profiler.BeginSample("Collision Projection");
+				
+				// project position to origin plane
+				Vector3 viewDirection = hazard.position - _cam.position;
 
-				// project to 0 z-axis
-				Vector3 hazardPosition = hazard.position;
-				hazardPosition.z = 0f;
+				Ray ray = new Ray(_cam.position, viewDirection);
+				Plane plane = new Plane(new Vector3(0f, 0f, -1f), 0f);
+				plane.Raycast(ray, out float enter);
+
+				Vector3 hazardPosition = _cam.position + viewDirection.normalized * enter;
 
 				if (Vector3.SqrMagnitude(hazardPosition - _playerElements[i].transform.position) <= _collisionDistanceSqrd)
 				{
 					_playerElements[i].Die();
 				}
+				UnityEngine.Profiling.Profiler.EndSample();
 			}
 		}
 	}

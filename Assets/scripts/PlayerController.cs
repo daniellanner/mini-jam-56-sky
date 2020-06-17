@@ -50,7 +50,7 @@ public class PlayerController : MonoBehaviourInTimeline
 	private float _dilationInput = 0f;
 	private float _dilationOffset = 2f;
 
-	private float _count = 0f;
+	private float _count = 6f;
 	private float _inputDirection = -1f;
 	#endregion
 
@@ -71,7 +71,12 @@ public class PlayerController : MonoBehaviourInTimeline
 		_dilationInput = 0f;
 		_dilationOffset = 2f;
 
-		_count = 0f;
+		_count = 6f;
+
+		for (int i = 0; i < _elements.Count; i++)
+		{
+			_elements[i].RadialPosition = i;
+		}
 	}
 
 	public override void ExitTimeline()
@@ -85,7 +90,6 @@ public class PlayerController : MonoBehaviourInTimeline
 		}
 	}
 
-	// Update is called once per frame
 	public override void UpdateTimeline(float dt)
 	{
 		CheckForInputInvert();
@@ -123,7 +127,7 @@ public class PlayerController : MonoBehaviourInTimeline
 		_dilationOffset = Mathf.Clamp(_dilationOffset, MIN_DILATION_DISTANCE, MAX_DILATION_DISTANCE);
 
 		// apply new offset
-
+		// poll alive elements
 		float count = 0f;
 		for (int i = _elements.Count - 1; i >= 0f; i--)
 		{
@@ -137,14 +141,17 @@ public class PlayerController : MonoBehaviourInTimeline
 			}
 		}
 
-		if(count <= 1)
+		if(count <= 0)
 		{
+			// game over
 			Timelines?.DeactiveTimeline("game");
 			Timelines?.ActivateTimeline("epilogue");
 		}
 
-		_count = Mathf.Lerp(_count, count, Time.deltaTime * 2.5f);
+		//fade old count to new count to avoid teleporting the orbs
+		_count = Mathf.Lerp(_count, count, dt * 1.5f);
 
+		// make sure we don't divide by zero
 		if(_count < 0.01f)
 		{
 			return;
@@ -154,8 +161,12 @@ public class PlayerController : MonoBehaviourInTimeline
 		{
 			Vector3 pos = _elements[i].transform.localPosition;
 
-			pos.x = Mathf.Sin((float)i / _count * TWO_PI + _rotationOffset) * _dilationOffset;
-			pos.y = Mathf.Cos((float)i / _count * TWO_PI + _rotationOffset) * _dilationOffset;
+			// fade old position to avoid teleporting the index of removed elements
+			float radialpos = Mathf.Lerp(_elements[i].RadialPosition, i, dt * 1.5f);
+			_elements[i].RadialPosition = radialpos;
+
+			pos.x = Mathf.Sin(radialpos / _count * TWO_PI + _rotationOffset) * _dilationOffset;
+			pos.y = Mathf.Cos(radialpos / _count * TWO_PI + _rotationOffset) * _dilationOffset;
 
 			_elements[i].transform.localPosition = pos;
 		}

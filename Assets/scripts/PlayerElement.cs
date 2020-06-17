@@ -13,6 +13,8 @@ public class PlayerElement : MonoBehaviourInTimeline
 	private ParticlePool _waterfallParticles;
 	private GoPool _poolElements;
 
+	public float RadialPosition { get; set; }
+
 	private void Awake()
 	{
 		_waterfallParticles = FindObjectsOfType<ParticlePool>().First(it => it.gameObject.tag == "Pool");
