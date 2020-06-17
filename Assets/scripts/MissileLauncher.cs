@@ -11,18 +11,26 @@ public class MissileLauncher : MonoBehaviourInTimeline
 	private const float BREADTH_OFF = 2.5f;
 	private readonly Vector3 RENDER_OFFSET = new Vector3(0, 0, .1f);
 
-	public GameObject missileGO;
-	public GameObject missileShadow;
+#pragma warning disable CS0649
+	[SerializeField]
+	private GameObject _missileGO;
+	[SerializeField]
+	private GameObject _missileShadow;
+#pragma warning restore CS0649
 
+	#region Cache
 	private ParticlePool _dirtParticles;
 	private LinePool _lines;
 	private SimpleRadialCollision _collision;
 	private CameraController _camera;
 	private AudioSource _audio;
+	#endregion
 
+	#region State
 	private float _shootInterval = 4f;
 	private float _missileDelay = 1.5f;
 	private float _currentCtr = 0f;
+	#endregion
 
 	private void Awake()
 	{
@@ -51,11 +59,6 @@ public class MissileLauncher : MonoBehaviourInTimeline
 		}
 	}
 
-	public override void ExitTimeline()
-	{
-		
-	}
-
 	public override void UpdateTimeline(float dt)
 	{
 		_currentCtr += dt;
@@ -80,13 +83,13 @@ public class MissileLauncher : MonoBehaviourInTimeline
 
 		to.z += Mathf.Sign(to.z) * 0.5f; // make space for our water pools
 
-		GameObject miss = Instantiate(missileGO, from, Quaternion.identity, transform);
+		GameObject miss = Instantiate(_missileGO, from, Quaternion.identity, transform);
 		miss.transform.LookAt(from + Vector3.forward, from - to);
 
 		_collision.AddHazard(miss.transform);
 		var line = _lines?.RequestLine(from + RENDER_OFFSET, to + RENDER_OFFSET);
 
-		Instantiate(missileShadow, to, Quaternion.identity, transform);
+		Instantiate(_missileShadow, to, Quaternion.identity, transform);
 
 		_audio.pitch = Random.Range(0.95f, 1.05f);
 		_audio.PlayDelayed(_missileDelay + .15f);
